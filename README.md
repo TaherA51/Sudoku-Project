@@ -6,9 +6,9 @@
 2. Use the link https://github.com/new/import to clone your forked repo to make it private. You will work on the project by adding your own files to this private repository.
 
 
-Roles:
+## Roles:
 
-## Person 1: Sudoku Generator and Core Logic
+### Person 1: Sudoku Generator and Core Logic
 
 **Specific Tasks:**
 - Implement the SudokuGenerator class in sudoku_generator.py, including:
@@ -22,7 +22,7 @@ Roles:
 - Implement the generate_sudoku function outside the class
 - Write unit tests for the SudokuGenerator class methods
 
-## Person 2: User Interface and PyGame Integration
+### Person 2: User Interface and PyGame Integration
 
 **Specific Tasks:**
 - Set up the PyGame environment and create the main game window
@@ -36,7 +36,7 @@ Roles:
 - Handle PyGame events for mouse clicks and keyboard input
 - Implement screen transitions between different game states
 
-## Person 3: Game Mechanics and User Interaction
+### Person 3: Game Mechanics and User Interaction
 
 **Specific Tasks:**
 - Implement the Cell class with methods:
@@ -51,7 +51,7 @@ Roles:
   - is_full and check_board methods to verify game state
 - Implement arrow key navigation between cells
 
-## Person 4: Main Game Loop and Integration
+### Person 4: Main Game Loop and Integration
 
 **Specific Tasks:**
 - Develop the main game loop in sudoku.py

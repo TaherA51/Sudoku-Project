@@ -8,7 +8,7 @@
 
 ## Roles:
 
-### Person 1: Sudoku Generator and Core Logic
+### Person 1: Sudoku Generator and Core Logic- COMPLETED
 
 **Specific Tasks:**
 - Implement the SudokuGenerator class in sudoku_generator.py, including:
@@ -36,7 +36,7 @@
 - Handle PyGame events for mouse clicks and keyboard input
 - Implement screen transitions between different game states
 
-### Person 3: Game Mechanics and User Interaction
+### Person 3: Game Mechanics and User Interaction- COMPLETED
 
 **Specific Tasks:**
 - Implement the Cell class with methods:

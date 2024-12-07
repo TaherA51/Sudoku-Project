@@ -34,7 +34,7 @@ class SudokuGenerator:
                 if self.board[r][c] == num:
                     return False
         return True
-  
+
     def is_valid(self, row, col, num):
         if not self.valid_in_row(row, num):
             return False
@@ -49,13 +49,12 @@ class SudokuGenerator:
         random.shuffle(nums)
         for r in range(3):
             for c in range(3):
-                self.board[row_start + r][col_start + c] = nums[r*3 + c]
+                self.board[row_start + r][col_start + c] = nums[r * 3 + c]
 
     def fill_diagonal(self):
         self.fill_box(0, 0)
         self.fill_box(3, 3)
         self.fill_box(6, 6)
-
 
     def fill_remaining(self, row, col):
         if (col >= self.row_length and row < self.row_length - 1):
@@ -95,6 +94,7 @@ class SudokuGenerator:
             if self.board[row][col] != 0:
                 self.board[row][col] = 0
                 count -= 1
+
 
 class Cell:
     def __init__(self, value, row, col, screen):
@@ -184,8 +184,8 @@ class Board:
                 return False
         for box_row in range(3):
             for box_col in range(3):
-                box_vals = [self.cells[r][c].value for r in range(box_row*3, box_row*3+3)
-                            for c in range(box_col*3, box_col*3+3)]
+                box_vals = [self.cells[r][c].value for r in range(box_row * 3, box_row * 3 + 3)
+                            for c in range(box_col * 3, box_col * 3 + 3)]
 
                 if not self.check_unique(box_vals):
                     return False
@@ -227,6 +227,7 @@ class Board:
                 rect = pygame.Rect(col * 3 * cell_size, row * 3 * cell_size, 3 * cell_size, 3 * cell_size)
                 pygame.draw.rect(self.screen, (0, 0, 0), rect, 4)
 
+
 def generate_sudoku(size, removed):
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
@@ -234,29 +235,27 @@ def generate_sudoku(size, removed):
     board = sudoku.get_board()
     return board
 
-def draw_button(screen, text, x, y, w, h, inactive_color, active_color, mouse, action=None):
-    """
-    Draw a button and handle actions when clicked.
-    """
-    clicked = False
-    if x+w > mouse[0] > x and y+h > mouse[1] > y:
-        pygame.draw.rect(screen, active_color, (x, y, w, h))
-        if pygame.mouse.get_pressed()[0] and action:
-            clicked = action
-    else:
-        pygame.draw.rect(screen, inactive_color, (x, y, w, h))
 
-    font = pygame.font.Font(None, 36)
-    text_surf = font.render(text, True, (0, 0, 0))
-    text_rect = text_surf.get_rect(center=(x+w/2, y+h/2))
+def draw_button(screen, text, x, y, w, h, inactive_color, active_color, mouse, action_type):
+
+    is_hovered = x + w > mouse[0] > x and y + h > mouse[1] > y
+    color = active_color if is_hovered else inactive_color
+
+    pygame.draw.rect(screen, color, (x, y, w, h), border_radius=10)
+    pygame.draw.rect(screen, (255, 255, 255), (x, y, w, h), 2, border_radius=10)  # White border
+
+    font = pygame.font.Font(None, 28)
+    text_surf = font.render(text, True, (0, 33, 165))  # UF Blue text
+    text_rect = text_surf.get_rect(center=(x + w / 2, y + h / 2))
     screen.blit(text_surf, text_rect)
-    
-    return clicked
+
+    if is_hovered and pygame.mouse.get_pressed()[0]:
+        return action_type
+    return None
+
 
 def display_message(screen, message, color):
-    """
-    Display a large centered message on the screen.
-    """
+
     screen.fill((255, 255, 255))
     font = pygame.font.Font(None, 64)
     text_surf = font.render(message, True, color)
@@ -268,27 +267,46 @@ def display_message(screen, message, color):
 
 def start_screen(screen):
     running = True
+
+    # UF Colors
+    UF_ORANGE = (250, 70, 22)
+    UF_BLUE = (0, 33, 165)
+
+    # Alligator image
+    alligator_img = pygame.image.load("alligator.png")
+    alligator_img = pygame.transform.scale(alligator_img, (200, 200))
+    alligator_rect = alligator_img.get_rect(center=(270, 400))
+
     while running:
-        screen.fill((255,255,255))
+        screen.fill(UF_BLUE)
+
+        # Title
         font = pygame.font.Font(None, 64)
-        title_surf = font.render("Welcome to Sudoku!", True, (0,0,0))
-        title_rect = title_surf.get_rect(center=(270,100))
+        title_surf = font.render("Gator Sudoku!", True, UF_ORANGE)
+        title_rect = title_surf.get_rect(center=(270, 100))
         screen.blit(title_surf, title_rect)
 
+        # Subtitle
         font_sub = pygame.font.Font(None, 36)
-        subtitle_surf = font_sub.render("Select Your Difficulty", True, (0,0,0))
-
+        subtitle_surf = font_sub.render("Select Your Difficulty", True, (255, 255, 255))
         subtitle_rect = subtitle_surf.get_rect(center=(270, 160))
         screen.blit(subtitle_surf, subtitle_rect)
 
+        # Buttons
         mouse = pygame.mouse.get_pos()
+        easy_button_rect = pygame.Rect(70, 220, 120, 50)
+        med_button_rect = pygame.Rect(210, 220, 120, 50)
+        hard_button_rect = pygame.Rect(350, 220, 120, 50)
 
-        easy_button_rect = (120, 220, 100, 50)
-        med_button_rect = (220, 220, 100, 50)
-        hard_button_rect = (320, 220, 100, 50)
-        draw_button(screen, "Easy", *easy_button_rect, (200,200,200), (170,170,170), mouse)
-        draw_button(screen, "Medium", *med_button_rect, (200,200,200), (170,170,170), mouse)
-        draw_button(screen, "Hard", *hard_button_rect, (200,200,200), (170,170,170), mouse)
+        easy_clicked = draw_button(screen, "Easy", easy_button_rect.x, easy_button_rect.y, easy_button_rect.width,
+                                   easy_button_rect.height, UF_ORANGE, (255, 150, 100), mouse, "easy")
+        med_clicked = draw_button(screen, "Medium", med_button_rect.x, med_button_rect.y, med_button_rect.width,
+                                  med_button_rect.height, UF_ORANGE, (255, 150, 100), mouse, "medium")
+        hard_clicked = draw_button(screen, "Hard", hard_button_rect.x, hard_button_rect.y, hard_button_rect.width,
+                                   hard_button_rect.height, UF_ORANGE, (255, 150, 100), mouse, "hard")
+
+        # Display alligator image
+        screen.blit(alligator_img, alligator_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -296,52 +314,18 @@ def start_screen(screen):
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                mx, my = event.pos
-        
-                if easy_button_rect[0] <= mx <= easy_button_rect[0]+easy_button_rect[2] and \
-                   easy_button_rect[1] <= my <= easy_button_rect[1]+easy_button_rect[3]:
+                if easy_button_rect.collidepoint(event.pos):
                     return 30
-                
-                if med_button_rect[0] <= mx <= med_button_rect[0]+med_button_rect[2] and \
-                   med_button_rect[1] <= my <= med_button_rect[1]+med_button_rect[3]:
+                elif med_button_rect.collidepoint(event.pos):
                     return 40
-                
-                if hard_button_rect[0] <= mx <= hard_button_rect[0]+hard_button_rect[2] and \
-                   hard_button_rect[1] <= my <= hard_button_rect[1]+hard_button_rect[3]:
+                elif hard_button_rect.collidepoint(event.pos):
                     return 50
-
-        pygame.display.flip()
-
-def game_over_screen(screen, restart_action):
-    """
-    Display the Game Over screen with a Restart button.
-    """
-    running = True
-    while running:
-        screen.fill((255, 255, 255))
-        font = pygame.font.Font(None, 64)
-        text_surf = font.render("Game Over!", True, (255, 0, 0))
-        text_rect = text_surf.get_rect(center=(270, 200))
-        screen.blit(text_surf, text_rect)
-
-        mouse = pygame.mouse.get_pos()
-        restart_clicked = draw_button(screen, "Restart", 170, 350, 200, 50, (200, 200, 200), (170, 170, 170), mouse, "restart")
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif restart_clicked == "restart":
-                restart_action()
-                return
 
         pygame.display.flip()
 
 
 def win_screen(screen):
-    """
-    Display the Win screen with an Exit button.
-    """
+
     running = True
     while running:
         screen.fill((255, 255, 255))
@@ -351,23 +335,69 @@ def win_screen(screen):
         screen.blit(text_surf, text_rect)
 
         mouse = pygame.mouse.get_pos()
-        exit_clicked = draw_button(screen, "Exit", 170, 350, 200, 50, (200, 200, 200), (170, 170, 170), mouse, "exit")
+        exit_button = pygame.Rect(170, 350, 200, 50)
+        exit_hovered = draw_button(screen, "Exit", exit_button.x, exit_button.y, exit_button.width, exit_button.height,
+                                   (200, 200, 200), (170, 170, 170), mouse, "exit")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif exit_clicked == "exit":
-                pygame.quit()
-                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and exit_button.collidepoint(event.pos):
+                    pygame.quit()
+                    sys.exit()
 
         pygame.display.flip()
+
+
+def game_over_screen(screen, restart_action):
+
+    running = True
+    while running:
+        screen.fill((255, 255, 255))
+        font = pygame.font.Font(None, 64)
+        text_surf = font.render("Game Over!", True, (255, 0, 0))
+        text_rect = text_surf.get_rect(center=(270, 200))
+        screen.blit(text_surf, text_rect)
+
+        mouse = pygame.mouse.get_pos()
+        restart_button = pygame.Rect(170, 350, 200, 50)
+        restart_hovered = draw_button(screen, "Restart", restart_button.x, restart_button.y, restart_button.width,
+                                      restart_button.height, (200, 200, 200), (170, 170, 170), mouse, "restart")
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and restart_button.collidepoint(event.pos):
+                    restart_action()
+                    return
+
+        pygame.display.flip()
+
+
+def draw_button(screen, text, x, y, w, h, inactive_color, active_color, mouse, action_type):
+    button_rect = pygame.Rect(x, y, w, h)
+    is_hovered = button_rect.collidepoint(mouse)
+    color = active_color if is_hovered else inactive_color
+
+    pygame.draw.rect(screen, color, button_rect, border_radius=10)
+    pygame.draw.rect(screen, (255, 255, 255), button_rect, 2, border_radius=10)  # White border
+
+    font = pygame.font.Font(None, 28)
+    text_surf = font.render(text, True, (0, 33, 165))  # UF Blue text
+    text_rect = text_surf.get_rect(center=button_rect.center)
+    screen.blit(text_surf, text_rect)
+
+    return is_hovered
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((540, 600))
-    pygame.display.set_caption("Sudoku")
+    pygame.display.set_caption("Gator Sudoku")
 
     removed_cells = start_screen(screen)
 
@@ -384,17 +414,22 @@ def main():
 
     initial_board_copy = [[cell.value for cell in row] for row in board.cells]
 
-
     running = True
     while running:
-        screen.fill((255, 255, 255))
+        screen.fill((240, 240, 245))  # Light grayish-blue background
         board.draw()
-        pygame.display.flip()
 
         mouse = pygame.mouse.get_pos()
-        reset_clicked = draw_button(screen, "Reset", 60, 550, 100, 40, (200, 200, 200), (170, 170, 170), mouse, "reset")
-        restart_clicked = draw_button(screen, "Restart", 220, 550, 100, 40, (200, 200, 200), (170, 170, 170), mouse, "restart")
-        exit_clicked = draw_button(screen, "Exit", 380, 550, 100, 40, (200, 200, 200), (170, 170, 170), mouse, "exit")
+        reset_button = pygame.Rect(60, 560, 120, 40)
+        restart_button = pygame.Rect(210, 560, 120, 40)
+        exit_button = pygame.Rect(360, 560, 120, 40)
+
+        reset_hovered = draw_button(screen, "Reset", reset_button.x, reset_button.y, reset_button.width,
+                                    reset_button.height, (200, 200, 255), (170, 170, 255), mouse, "reset")
+        restart_hovered = draw_button(screen, "Restart", restart_button.x, restart_button.y, restart_button.width,
+                                      restart_button.height, (200, 255, 200), (170, 255, 170), mouse, "restart")
+        exit_hovered = draw_button(screen, "Exit", exit_button.x, exit_button.y, exit_button.width, exit_button.height,
+                                   (255, 200, 200), (255, 170, 170), mouse, "exit")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -426,23 +461,22 @@ def main():
                     board.sketch(value)
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                pos = event.pos
-                clicked_cell = board.click(pos[0], pos[1])
-                if clicked_cell:
-                    board.select(*clicked_cell)
-
-        if reset_clicked == "reset":
-            for r, row in enumerate(initial_board_copy):
-                for c, value in enumerate(row):
-                    board.cells[r][c].set_cell_value(value)
-            board.select(0, 0)
-
-        if restart_clicked == "restart":
-            main()
-            return
-
-        if exit_clicked == "exit":
-            running = False
+                if event.button == 1:  # Left mouse button
+                    pos = event.pos
+                    if reset_button.collidepoint(pos):
+                        for r, row in enumerate(initial_board_copy):
+                            for c, value in enumerate(row):
+                                board.cells[r][c].set_cell_value(value)
+                        board.select(0, 0)
+                    elif restart_button.collidepoint(pos):
+                        main()
+                        return
+                    elif exit_button.collidepoint(pos):
+                        running = False
+                    else:
+                        clicked_cell = board.click(pos[0], pos[1])
+                        if clicked_cell:
+                            board.select(*clicked_cell)
 
         pygame.display.flip()
 

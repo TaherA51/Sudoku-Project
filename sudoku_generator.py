@@ -268,11 +268,9 @@ def display_message(screen, message, color):
 def start_screen(screen):
     running = True
 
-    # UF Colors
     UF_ORANGE = (250, 70, 22)
     UF_BLUE = (0, 33, 165)
 
-    # Alligator image
     alligator_img = pygame.image.load("alligator.png")
     alligator_img = pygame.transform.scale(alligator_img, (200, 200))
     alligator_rect = alligator_img.get_rect(center=(270, 400))
@@ -280,19 +278,16 @@ def start_screen(screen):
     while running:
         screen.fill(UF_BLUE)
 
-        # Title
         font = pygame.font.Font(None, 64)
         title_surf = font.render("Gator Sudoku!", True, UF_ORANGE)
         title_rect = title_surf.get_rect(center=(270, 100))
         screen.blit(title_surf, title_rect)
 
-        # Subtitle
         font_sub = pygame.font.Font(None, 36)
         subtitle_surf = font_sub.render("Select Your Difficulty", True, (255, 255, 255))
         subtitle_rect = subtitle_surf.get_rect(center=(270, 160))
         screen.blit(subtitle_surf, subtitle_rect)
 
-        # Buttons
         mouse = pygame.mouse.get_pos()
         easy_button_rect = pygame.Rect(70, 220, 120, 50)
         med_button_rect = pygame.Rect(210, 220, 120, 50)
@@ -305,7 +300,6 @@ def start_screen(screen):
         hard_clicked = draw_button(screen, "Hard", hard_button_rect.x, hard_button_rect.y, hard_button_rect.width,
                                    hard_button_rect.height, UF_ORANGE, (255, 150, 100), mouse, "hard")
 
-        # Display alligator image
         screen.blit(alligator_img, alligator_rect)
 
         for event in pygame.event.get():
@@ -416,7 +410,7 @@ def main():
 
     running = True
     while running:
-        screen.fill((240, 240, 245))  # Light grayish-blue background
+        screen.fill((240, 240, 245)) 
         board.draw()
 
         mouse = pygame.mouse.get_pos()
@@ -461,7 +455,7 @@ def main():
                     board.sketch(value)
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Left mouse button
+                if event.button == 1: 
                     pos = event.pos
                     if reset_button.collidepoint(pos):
                         for r, row in enumerate(initial_board_copy):

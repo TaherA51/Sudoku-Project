@@ -347,13 +347,40 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((540, 540))
     pygame.display.set_caption("Sudoku")
+    
+    difficulty_map = {
+        '1': ("Easy", 30),
+        '2': ("Medium", 40),
+        '3': ("Hard", 50)
+    }
+    
+    print("Select Difficulty: 1 - Easy, 2 - Medium, 3 - Hard")
+    difficulty_input = input("Enter choice: ")
+    
+    if difficulty_input not in difficulty_map:
+        print("Invalid input. Defaulting to Easy difficulty.")
+        difficulty_input = '1'
+    
+    difficulty_name, removed_cells = difficulty_map[difficulty_input]
+    print(f"Starting game with {difficulty_name} difficulty.")
 
-    board = Board(9, 9, screen, difficulty=1)
+    sudoku = SudokuGenerator(9, removed_cells)
+    sudoku.fill_values()
+    sudoku.remove_cells()
+    initial_board = sudoku.get_board()
+
+    board = Board(9, 9, screen, difficulty=int(difficulty_input))
+    for row in range(9):
+        for col in range(9):
+            board.cells[row][col].set_cell_value(initial_board[row][col])
 
     running = True
     while running:
         screen.fill((255, 255, 255))
-        board.draw()
+        
+        for row in board.cells:
+            for cell in row:
+                cell.draw()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -369,6 +396,12 @@ def main():
                     board.move_selection("RIGHT")
                 elif event.key == pygame.K_DELETE:
                     board.clear()
+                elif event.key == pygame.K_RETURN:
+                    if board.is_full() and board.check_board():
+                        print("Congratulations! You solved the puzzle.")
+                        running = False
+                    else:
+                        print("Board is incomplete or incorrect. Keep trying!")
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos

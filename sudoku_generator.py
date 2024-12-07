@@ -2,6 +2,7 @@ import math, random
 import pygame
 import sys
 
+
 class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
@@ -14,6 +15,10 @@ class SudokuGenerator:
 
     def valid_in_row(self, row, num):
         return num not in self.board[row]
+
+    def print_board(self):
+        for row in self.board:
+            print(row)
 
     def valid_in_col(self, col, num):
         for i in range(self.row_length):
@@ -29,7 +34,7 @@ class SudokuGenerator:
                 if self.board[r][c] == num:
                     return False
         return True
-
+  
     def is_valid(self, row, col, num):
         if not self.valid_in_row(row, num):
             return False
@@ -50,6 +55,7 @@ class SudokuGenerator:
         self.fill_box(0, 0)
         self.fill_box(3, 3)
         self.fill_box(6, 6)
+
 
     def fill_remaining(self, row, col):
         if (col >= self.row_length and row < self.row_length - 1):
@@ -127,6 +133,7 @@ class Cell:
             sketch_text = font.render(str(self.sketch), True, (128, 128, 128))
             self.screen.blit(sketch_text, (x + 5, y + 5))
 
+
 class Board:
     def __init__(self, width, height, screen, difficulty):
         self.width = width
@@ -150,7 +157,6 @@ class Board:
         return None
 
     def clear(self):
-        # Clear only if the cell is sketched (not originally filled)
         if self.selected_cell and self.selected_cell.value == 0:
             self.selected_cell.set_sketched_value(0)
 
@@ -180,6 +186,7 @@ class Board:
             for box_col in range(3):
                 box_vals = [self.cells[r][c].value for r in range(box_row*3, box_row*3+3)
                             for c in range(box_col*3, box_col*3+3)]
+
                 if not self.check_unique(box_vals):
                     return False
         return True
@@ -220,11 +227,6 @@ class Board:
                 rect = pygame.Rect(col * 3 * cell_size, row * 3 * cell_size, 3 * cell_size, 3 * cell_size)
                 pygame.draw.rect(self.screen, (0, 0, 0), rect, 4)
 
-
-
-
-
-
 def generate_sudoku(size, removed):
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
@@ -263,6 +265,7 @@ def display_message(screen, message, color):
     pygame.display.flip()
     pygame.time.wait(3000)
 
+
 def start_screen(screen):
     running = True
     while running:
@@ -274,6 +277,7 @@ def start_screen(screen):
 
         font_sub = pygame.font.Font(None, 36)
         subtitle_surf = font_sub.render("Select Your Difficulty", True, (0,0,0))
+
         subtitle_rect = subtitle_surf.get_rect(center=(270, 160))
         screen.blit(subtitle_surf, subtitle_rect)
 
@@ -380,10 +384,12 @@ def main():
 
     initial_board_copy = [[cell.value for cell in row] for row in board.cells]
 
+
     running = True
     while running:
         screen.fill((255, 255, 255))
         board.draw()
+        pygame.display.flip()
 
         mouse = pygame.mouse.get_pos()
         reset_clicked = draw_button(screen, "Reset", 60, 550, 100, 40, (200, 200, 200), (170, 170, 170), mouse, "reset")
@@ -414,6 +420,7 @@ def main():
                         else:
                             game_over_screen(screen, main)
                             running = False
+
                 elif pygame.K_1 <= event.key <= pygame.K_9:
                     value = event.key - pygame.K_0
                     board.sketch(value)
@@ -444,5 +451,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

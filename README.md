@@ -1,11 +1,5 @@
 # Sudoku-Project
 
-## Fork Repository Instructions
-### Steps:
-1. When you go to the github repository we provided, on the top right hand corner of the screen, there is a button that says "Fork". That will fork the repo to your own github 
-2. Use the link https://github.com/new/import to clone your forked repo to make it private. You will work on the project by adding your own files to this private repository.
-
-
 ## Roles:
 
 ### Person 1: Sudoku Generator and Core Logic- COMPLETED
@@ -22,7 +16,7 @@
 - Implement the generate_sudoku function outside the class
 - Write unit tests for the SudokuGenerator class methods
 
-### Person 2: User Interface and PyGame Integration
+### Person 2: User Interface and PyGame Integration- COMPLETED
 
 **Specific Tasks:**
 - Set up the PyGame environment and create the main game window
@@ -51,7 +45,7 @@
   - is_full and check_board methods to verify game state
 - Implement arrow key navigation between cells
 
-### Person 4: Main Game Loop and Integration
+### Person 4: Main Game Loop and Integration- COMPELTED
 
 **Specific Tasks:**
 - Develop the main game loop in sudoku.py
